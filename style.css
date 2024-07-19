@@ -9,7 +9,11 @@ body {
 span{
     line-height: 2em;
 }
-
+#info{
+    text-align: center;
+    font-size: large;
+    color: rgb(255, 76, 240);
+}
 .wrapper {
     max-width: 1200px;
     place-items: center;
@@ -29,18 +33,18 @@ span{
     display: grid;
     grid-template-columns: repeat(10, 30px);
     grid-template-rows: repeat(10, 30px);
-    gap: 1px;
 }
 
 .game-board div {
-    width: 30px;
-    height: 30px;
-    border: 1px solid #383b45;
+    border: .3px solid #383b45;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    box-sizing: border-box;
+    
 }
+
 #game-props{
     max-width: 620px;
     padding: 10px;
@@ -105,28 +109,22 @@ span{
 }
 
 /* Additional styles for game outcomes */
+.cpu-board-bg {
+    background-color: #cef8f4 !important;
+}
 .taken {
-    background-color: blue;
+    background-color: #cef8f4;
 }
 
 .hit {
-    background-color: red;
-}
-
-.hit-ship {
     background-color: rgb(255, 76, 240);
 }
 
 .miss {
-    background-color: lightblue;
+    background-color: rgba(0,202,224,.8);
 }
 
-.already-hit {
-    background-color: rgb(115, 0, 0);
-    pointer-events: none;
+.sunk {
+    background-color: black;
 }
 
-.vertical {
-    transform: rotate(90deg);
-    transform-origin: left top;
-}
