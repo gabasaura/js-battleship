@@ -1,22 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>raw js battleship</title>
+    <title>Raw JS Battleship</title>
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
+    <div class="wrapper">
+        <div id="game-info">
+            <h1>BATTLESHIPS</h1>
+            <p>Turno:<span id="turn-display">Jugador</span></p>
+            <p>Info: <span id="info"></span></p>
+        </div>
 
-    <div id="game-info"></div>
-    <div id="game-boars"></div>
-    <div id="ships">
-        <div class="ship1"></div>
-        <div class="ship2"></div>
-        <div class="ship3"></div>
-        <div class="ship4"></div>
-        <div class="ship5"></div>
+        <div class="game-container">
+            <div id="game-board-player" class="game-board"></div>
+            <div id="game-board-cpu" class="game-board"></div>
+        </div>
+        <div id="game-props">
+            <div class="ship" id="ship1" draggable="true" data-length="5"></div>
+            <div class="ship" id="ship2" draggable="true" data-length="4"></div>
+            <div class="ship" id="ship3" draggable="true" data-length="3"></div>
+            <div class="ship" id="ship4" draggable="true" data-length="3"></div>
+            <div class="ship" id="ship5" draggable="true" data-length="2"></div>
+        </div>
+
+        <div id="btn-flip">Girar</div>
     </div>
-
-    
+    <script src="script.js"></script>
 </body>
+
 </html>
