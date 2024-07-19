@@ -28,11 +28,11 @@ A Battleship game implemented in vanilla JS.
 
 - The game board is a 10x10 grid.
 - Each player (you and the CPU) has 5 ships of varying lengths:
-  -- Carrier (5 squares)
-  -- Battleship (4 squares)
-  -- Cruiser (3 squares)
-  -- Submarine (3 squares)
-  -- Destroyer (2 squares)
+  - Carrier (5 squares)
+  - Battleship (4 squares)
+  - Cruiser (3 squares)
+  - Submarine (3 squares)
+  - Destroyer (2 squares)
 - Ships can be placed horizontally or vertically.
 - Players take turns attacking by selecting a square on the opponent's board.
 - The first player to sink all opponent ships wins.
