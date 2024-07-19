@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const playerBoard = document.getElementById('game-board-player');
     const cpuBoard = document.getElementById('game-board-cpu');
     const ships = document.querySelectorAll('.ship');
-    const startButton = document.getElementById('btn-start');
+    const restartButton = document.getElementById('btn-restart');
     const playerSquares = [];
     const cpuSquares = [];
     let playerTurn = true;
@@ -15,8 +15,8 @@ document.addEventListener('DOMContentLoaded', () => {
     createBoard(playerBoard, playerSquares);
     createBoard(cpuBoard, cpuSquares);
 
-    // Start button event listener
-    startButton.addEventListener('click', startGame);
+    // Restart button event listener
+    restartButton.addEventListener('click', restartGame);
 
     // Drag and Drop event listeners
     ships.forEach(ship => {
@@ -149,17 +149,37 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('turn-display').textContent = 'Player';
     }
 
-    function startGame() {
+    function restartGame() {
         // Clear boards and reset states for a new game
         playerSquares.forEach(square => {
             square.classList.remove('hit', 'miss', 'taken', 'player-ship');
         });
         cpuSquares.forEach(square => {
-            square.classList.remove('hit', 'miss', 'taken');
+            square.classList.remove('hit', 'hit-ship', 'miss', 'taken');
         });
+
+        // Reset game boards
         playerGameBoard = Array(10).fill().map(() => Array(10).fill(0));
         cpuGameBoard = Array(10).fill().map(() => Array(10).fill(0));
+
+        // Replace ships
+        document.getElementById('game-props').innerHTML = `
+            <div class="ship" id="ship1" draggable="true" data-length="1"></div>
+            <div class="ship" id="ship2" draggable="true" data-length="2"></div>
+            <div class="ship" id="ship3" draggable="true" data-length="3"></div>
+            <div class="ship" id="ship4" draggable="true" data-length="3"></div>
+            <div class="ship" id="ship5" draggable="true" data-length="5"></div>
+        `;
+
+        // Re-attach drag event listeners to new ship elements
+        const newShips = document.querySelectorAll('.ship');
+        newShips.forEach(ship => {
+            ship.addEventListener('dragstart', dragStart);
+        });
+
+        // Place CPU ships
         placeCpuShips();
+
         document.getElementById('turn-display').textContent = 'Player';
         playerTurn = true;
     }
