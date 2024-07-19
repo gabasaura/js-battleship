@@ -1,67 +1,51 @@
 document.addEventListener('DOMContentLoaded', () => {
-    
-    
     const playerBoard = document.getElementById('game-board-player');
     const cpuBoard = document.getElementById('game-board-cpu');
     const ships = document.querySelectorAll('.ship');
     const startButton = document.getElementById('btn-start');
-    let isHorizontal = true;
     const playerSquares = [];
     const cpuSquares = [];
     let playerTurn = true;
+
+    // Initialize the game boards
     let playerGameBoard = Array(10).fill().map(() => Array(10).fill(0));
     let cpuGameBoard = Array(10).fill().map(() => Array(10).fill(0));
 
     // Create the game boards
-    createBoard(playerBoard, playerSquares, playerGameBoard);
-    createBoard(cpuBoard, cpuSquares, cpuGameBoard);
-    console.log(playerGameBoard)
-
-
-    // Drag and Drop event listeners
-    ships.forEach(ship => {
-        ship.addEventListener('dragstart', dragStart);
-        ship.addEventListener('dragend', dragEnd);
-    });
-
-    playerBoard.addEventListener('dragover', dragOver);
-    playerBoard.addEventListener('drop', drop);
+    createBoard(playerBoard, playerSquares);
+    createBoard(cpuBoard, cpuSquares);
 
     // Start button event listener
     startButton.addEventListener('click', startGame);
 
+    // Drag and Drop event listeners
+    ships.forEach(ship => {
+        ship.addEventListener('dragstart', dragStart);
+    });
+
+    playerBoard.addEventListener('dragover', dragOver);
+    playerBoard.addEventListener('drop', (e) => drop(e, playerGameBoard));
+
     // Create board function
-    function createBoard(board, squaresArray, gameBoard) {
+    function createBoard(board, squaresArray) {
         for (let i = 0; i < 100; i++) {
             const square = document.createElement('div');
             square.dataset.id = i;
             board.appendChild(square);
             squaresArray.push(square);
-
-            // Set initial class based on gameBoard state
-            const row = Math.floor(i / 10);
-            const col = i % 10;
-            if (gameBoard[row][col] === 1) {
-                square.classList.add('taken');
-            }
         }
     }
 
     // Drag functions
     function dragStart(e) {
         e.dataTransfer.setData('text', e.target.id);
-        e.target.classList.add('dragging');
-    }
-
-    function dragEnd(e) {
-        e.target.classList.remove('dragging');
     }
 
     function dragOver(e) {
         e.preventDefault();
     }
 
-    function drop(e) {
+    function drop(e, gameBoard) {
         e.preventDefault();
         const shipId = e.dataTransfer.getData('text');
         const ship = document.getElementById(shipId);
@@ -70,9 +54,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Calculate if the ship can be placed
         if (isValidPlacement(shipLength, dropLocation, playerSquares)) {
-            placeShip(ship, dropLocation, playerSquares, playerGameBoard);
+            placeShip(ship, dropLocation, playerSquares, gameBoard);
         } else {
-            alert('Invalid placement');
+            console.log('Invalid placement');
         }
     }
 
@@ -81,14 +65,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const col = index % 10;
 
         for (let i = 0; i < length; i++) {
-            if (isHorizontal) {
-                if (col + i >= 10 || squares[index + i].classList.contains('taken')) {
-                    return false;
-                }
-            } else {
-                if (row + i >= 10 || squares[index + i * 10].classList.contains('taken')) {
-                    return false;
-                }
+            if (col + i >= 10 || squares[index + i].classList.contains('taken')) {
+                return false;
             }
         }
         return true;
@@ -100,15 +78,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const col = index % 10;
 
         for (let i = 0; i < shipLength; i++) {
-            if (isHorizontal) {
-                squares[index + i].classList.add('taken', 'player-ship');
-                gameBoard[row][col + i] = 1;
-            } else {
-                squares[index + i * 10].classList.add('taken', 'player-ship');
-                gameBoard[row + i][col] = 1;
-            }
+            squares[index + i].classList.add('taken', 'player-ship');
+            gameBoard[row][col + i] = 1;
         }
-        ship.remove();
+        ship.parentNode.removeChild(ship); // Proper way to remove the ship from the DOM
     }
 
     // CPU setup
@@ -117,17 +90,23 @@ document.addEventListener('DOMContentLoaded', () => {
         shipLengths.forEach(length => {
             let valid = false;
             while (!valid) {
-                const direction = Math.random() < 0.5;
-                isHorizontal = direction;
                 const index = Math.floor(Math.random() * 100);
                 if (isValidPlacement(length, index, cpuSquares)) {
-                    placeShip({
-                        dataset: { length }
-                    }, index, cpuSquares, cpuGameBoard);
+                    placeCpuShip(length, index, cpuSquares, cpuGameBoard);
                     valid = true;
                 }
             }
         });
+    }
+
+    function placeCpuShip(length, index, squares, gameBoard) {
+        const row = Math.floor(index / 10);
+        const col = index % 10;
+
+        for (let i = 0; i < length; i++) {
+            squares[index + i].classList.add('taken');
+            gameBoard[row][col + i] = 1;
+        }
     }
 
     placeCpuShips();

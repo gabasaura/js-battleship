@@ -1,15 +1,17 @@
 /* General styles */
 body {
     background-color: #bbc1c8;
-    text-align: center;
     display: flex;
     margin: 0 auto;
     color: #383b45;
     font-family: 'Courier New', Courier, monospace;
 }
+span{
+    line-height: 2em;
+}
 
 .wrapper {
-    width: 1200px;
+    max-width: 1200px;
     place-items: center;
     margin: 0 auto;
 }
@@ -19,6 +21,7 @@ body {
     display: flex;
     justify-content: center;
     margin: 0 auto;
+    gap: 10px;
 }
 
 /* Style for game boards */
@@ -27,13 +30,11 @@ body {
     grid-template-columns: repeat(10, 30px);
     grid-template-rows: repeat(10, 30px);
     gap: 1px;
-    margin: 20px 10px 20px;
 }
 
 .game-board div {
     width: 30px;
     height: 30px;
-    background-color: #80d0f8;
     border: 1px solid #383b45;
     display: flex;
     justify-content: center;
@@ -41,8 +42,10 @@ body {
     cursor: pointer;
 }
 #game-props{
-    max-width: 640px;
+    max-width: 620px;
+    padding: 10px;
     margin: 0 auto;
+    border: 1px solid #383b45;
     display: flex;
     gap: 15px;
 }
