@@ -7,7 +7,7 @@ A Battleship game implemented in vanilla JS.
 - [✨ Features](#features)
 - [💅 Usage](#usage)
 - [📌 Game Rules](#game-rules)
-- [🕹️ PLAY](#play)
+- [🕹️ Play](#play)
 
 ## Features
 
@@ -38,4 +38,4 @@ A Battleship game implemented in vanilla JS.
 - The first player to sink all opponent ships wins.
 
 ## Play
-[🔗🕹️ Be my beta tester]()
+[🔗🕹️ Please, be my beta tester](https://gabasaura.github.io/js-battleship/)

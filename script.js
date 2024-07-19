@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const cpuBoard = document.getElementById('game-board-cpu');
     const ships = document.querySelectorAll('.ship');
     const flipButton = document.getElementById('btn-flip');
+    const startButton = document.getElementById('btn-start');
     let isHorizontal = true;
     const playerSquares = [];
     const cpuSquares = [];
@@ -21,10 +22,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // Drag and Drop event listeners
     ships.forEach(ship => {
         ship.addEventListener('dragstart', dragStart);
+        ship.addEventListener('dragend', dragEnd);
     });
 
     playerBoard.addEventListener('dragover', dragOver);
     playerBoard.addEventListener('drop', drop);
+
+    // Start button event listener
+    startButton.addEventListener('click', startGame);
 
     // Create board function
     function createBoard(board, squaresArray) {
@@ -39,6 +44,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Drag functions
     function dragStart(e) {
         e.dataTransfer.setData('text', e.target.id);
+        e.target.classList.add('dragging');
+    }
+
+    function dragEnd(e) {
+        e.target.classList.remove('dragging');
     }
 
     function dragOver(e) {
@@ -56,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isValidPlacement(shipLength, dropLocation, playerSquares)) {
             placeShip(ship, dropLocation, playerSquares);
         } else {
-            console.log('Invalid placement');
+            alert('Invalid placement');
         }
     }
 
@@ -83,9 +93,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         for (let i = 0; i < shipLength; i++) {
             if (isHorizontal) {
-                squares[index + i].classList.add('taken', 'ship');
+                squares[index + i].classList.add('taken', 'player-ship');
             } else {
-                squares[index + i * 10].classList.add('taken', 'ship');
+                squares[index + i * 10].classList.add('taken', 'player-ship');
             }
         }
         ship.remove();
@@ -101,21 +111,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 isHorizontal = direction;
                 const index = Math.floor(Math.random() * 100);
                 if (isValidPlacement(length, index, cpuSquares)) {
-                    placeShip({
-                        dataset: { length }
-                    }, index, cpuSquares);
+                    const mockShip = { dataset: { length } };
+                    placeShip(mockShip, index, cpuSquares);
                     valid = true;
                 }
             }
         });
     }
 
-    placeCpuShips();
+    // Start the game
+    function startGame() {
+        placeCpuShips();
+        document.getElementById('turn-display').textContent = 'Jugador';
+    }
 
     // Game logic
     cpuBoard.addEventListener('click', e => {
-        if (playerTurn && e.target.classList.contains('ship')) {
+        if (playerTurn && !e.target.classList.contains('hit') && !e.target.classList.contains('miss')) {
+            const hit = e.target.classList.contains('ship');
             e.target.classList.add('hit');
+            if (hit) {
+                e.target.classList.add('hit-ship');
+            } else {
+                e.target.classList.add('miss');
+            }
             playerTurn = false;
             document.getElementById('turn-display').textContent = 'CPU';
             setTimeout(cpuTurn, 1000);
@@ -123,10 +142,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function cpuTurn() {
-        const validTargets = playerSquares.filter(square => !square.classList.contains('hit'));
+        const validTargets = playerSquares.filter(square => !square.classList.contains('hit') && !square.classList.contains('miss'));
         const target = validTargets[Math.floor(Math.random() * validTargets.length)];
         target.classList.add('hit');
+        if (target.classList.contains('player-ship')) {
+            target.classList.add('hit-ship');
+        } else {
+            target.classList.add('miss');
+        }
         playerTurn = true;
-        document.getElementById('turn-display').textContent = 'Player';
+        document.getElementById('turn-display').textContent = 'Jugador';
     }
 });
