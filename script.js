@@ -1,23 +1,22 @@
 document.addEventListener('DOMContentLoaded', () => {
+    
+    
     const playerBoard = document.getElementById('game-board-player');
     const cpuBoard = document.getElementById('game-board-cpu');
     const ships = document.querySelectorAll('.ship');
-    const flipButton = document.getElementById('btn-flip');
     const startButton = document.getElementById('btn-start');
     let isHorizontal = true;
     const playerSquares = [];
     const cpuSquares = [];
     let playerTurn = true;
+    let playerGameBoard = Array(10).fill().map(() => Array(10).fill(0));
+    let cpuGameBoard = Array(10).fill().map(() => Array(10).fill(0));
 
     // Create the game boards
-    createBoard(playerBoard, playerSquares);
-    createBoard(cpuBoard, cpuSquares);
+    createBoard(playerBoard, playerSquares, playerGameBoard);
+    createBoard(cpuBoard, cpuSquares, cpuGameBoard);
+    console.log(playerGameBoard)
 
-    // Flip button event listener
-    flipButton.addEventListener('click', () => {
-        isHorizontal = !isHorizontal;
-        ships.forEach(ship => ship.classList.toggle('vertical'));
-    });
 
     // Drag and Drop event listeners
     ships.forEach(ship => {
@@ -32,12 +31,19 @@ document.addEventListener('DOMContentLoaded', () => {
     startButton.addEventListener('click', startGame);
 
     // Create board function
-    function createBoard(board, squaresArray) {
+    function createBoard(board, squaresArray, gameBoard) {
         for (let i = 0; i < 100; i++) {
             const square = document.createElement('div');
             square.dataset.id = i;
             board.appendChild(square);
             squaresArray.push(square);
+
+            // Set initial class based on gameBoard state
+            const row = Math.floor(i / 10);
+            const col = i % 10;
+            if (gameBoard[row][col] === 1) {
+                square.classList.add('taken');
+            }
         }
     }
 
@@ -64,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Calculate if the ship can be placed
         if (isValidPlacement(shipLength, dropLocation, playerSquares)) {
-            placeShip(ship, dropLocation, playerSquares);
+            placeShip(ship, dropLocation, playerSquares, playerGameBoard);
         } else {
             alert('Invalid placement');
         }
@@ -88,14 +94,18 @@ document.addEventListener('DOMContentLoaded', () => {
         return true;
     }
 
-    function placeShip(ship, index, squares) {
+    function placeShip(ship, index, squares, gameBoard) {
         const shipLength = parseInt(ship.dataset.length);
+        const row = Math.floor(index / 10);
+        const col = index % 10;
 
         for (let i = 0; i < shipLength; i++) {
             if (isHorizontal) {
                 squares[index + i].classList.add('taken', 'player-ship');
+                gameBoard[row][col + i] = 1;
             } else {
                 squares[index + i * 10].classList.add('taken', 'player-ship');
+                gameBoard[row + i][col] = 1;
             }
         }
         ship.remove();
@@ -111,29 +121,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 isHorizontal = direction;
                 const index = Math.floor(Math.random() * 100);
                 if (isValidPlacement(length, index, cpuSquares)) {
-                    const mockShip = { dataset: { length } };
-                    placeShip(mockShip, index, cpuSquares);
+                    placeShip({
+                        dataset: { length }
+                    }, index, cpuSquares, cpuGameBoard);
                     valid = true;
                 }
             }
         });
     }
 
-    // Start the game
-    function startGame() {
-        placeCpuShips();
-        document.getElementById('turn-display').textContent = 'Jugador';
-    }
+    placeCpuShips();
 
     // Game logic
     cpuBoard.addEventListener('click', e => {
         if (playerTurn && !e.target.classList.contains('hit') && !e.target.classList.contains('miss')) {
-            const hit = e.target.classList.contains('ship');
-            e.target.classList.add('hit');
-            if (hit) {
-                e.target.classList.add('hit-ship');
+            const target = e.target;
+            const index = parseInt(target.dataset.id);
+            const row = Math.floor(index / 10);
+            const col = index % 10;
+            if (cpuGameBoard[row][col] === 1) {
+                target.classList.add('hit', 'hit-ship');
+                cpuGameBoard[row][col] = 2;
             } else {
-                e.target.classList.add('miss');
+                target.classList.add('miss');
+                cpuGameBoard[row][col] = 3;
             }
             playerTurn = false;
             document.getElementById('turn-display').textContent = 'CPU';
@@ -144,13 +155,33 @@ document.addEventListener('DOMContentLoaded', () => {
     function cpuTurn() {
         const validTargets = playerSquares.filter(square => !square.classList.contains('hit') && !square.classList.contains('miss'));
         const target = validTargets[Math.floor(Math.random() * validTargets.length)];
-        target.classList.add('hit');
-        if (target.classList.contains('player-ship')) {
-            target.classList.add('hit-ship');
+        const index = parseInt(target.dataset.id);
+        const row = Math.floor(index / 10);
+        const col = index % 10;
+
+        if (playerGameBoard[row][col] === 1) {
+            target.classList.add('hit', 'hit-ship');
+            playerGameBoard[row][col] = 2;
         } else {
             target.classList.add('miss');
+            playerGameBoard[row][col] = 3;
         }
         playerTurn = true;
-        document.getElementById('turn-display').textContent = 'Jugador';
+        document.getElementById('turn-display').textContent = 'Player';
+    }
+
+    function startGame() {
+        // Clear boards and reset states for a new game
+        playerSquares.forEach(square => {
+            square.classList.remove('hit', 'miss', 'taken', 'player-ship');
+        });
+        cpuSquares.forEach(square => {
+            square.classList.remove('hit', 'miss', 'taken');
+        });
+        playerGameBoard = Array(10).fill().map(() => Array(10).fill(0));
+        cpuGameBoard = Array(10).fill().map(() => Array(10).fill(0));
+        placeCpuShips();
+        document.getElementById('turn-display').textContent = 'Player';
+        playerTurn = true;
     }
 });

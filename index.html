@@ -12,9 +12,16 @@
     <div class="wrapper">
         <h1>BATTLESHIPS</h1>
 <!--CONTAINER BOARDS-->
+
         <div class="game-container">
+            <div>
+            <span>Jugador</span>
             <div id="game-board-player" class="game-board"></div>
+            </div>
+            <div>
+            <span>CPU</span>
             <div id="game-board-cpu" class="game-board"></div>
+        </div>
         </div>
 <!--INFO GAME-->
         <div id="game-info">
@@ -22,17 +29,20 @@
             <p>Info: <span id="info"></span></p>
         </div>
 <!--SHIPS-->
+<span>Arrastra los barcos de tu flota al tablero.</span>
+
         <div id="game-props">
-            <div class="ship" id="ship1" draggable="true" data-length="5"></div>
-            <div class="ship" id="ship2" draggable="true" data-length="4"></div>
+            <div class="ship" id="ship1" draggable="true" data-length="1"></div>
+            <div class="ship" id="ship2" draggable="true" data-length="2"></div>
             <div class="ship" id="ship3" draggable="true" data-length="3"></div>
             <div class="ship" id="ship4" draggable="true" data-length="3"></div>
-            <div class="ship" id="ship5" draggable="true" data-length="2"></div>
+            <div class="ship" id="ship5" draggable="true" data-length="5"></div>
         </div>
+        
 <!--BUTTONES-->
         <div class="btn-container">
         <div class="btn-start" id="btn-start">Start</div>
-        <div id="btn-flip">Girar</div>
+        <!--<div id="btn-flip">Girar</div>-->
         </div>
     </div>
     <script src="script.js"></script>
