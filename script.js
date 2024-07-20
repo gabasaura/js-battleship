@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    
+
     const playerBoard = document.getElementById('game-board-player');
     const cpuBoard = document.getElementById('game-board-cpu');
     const ships = document.querySelectorAll('.ship');
@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
             placeShip(ship, dropLocation, playerSquares, gameBoard, playerShips);
             checkAllShipsPlaced();
         } else {
-            alert('Ops!');
+            alert('Ops! Ahí no se puede 🤷‍♀️');
             console.log('posicion invalida')
         }
     }
@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // CPU setup
     function placeCpuShips() {
-        const shipLengths = [5, 4, 3, 3, 1];
+        const shipLengths = [5, 3, 3, 2, 1];
         shipLengths.forEach(length => {
             let valid = false;
             while (!valid) {
@@ -191,7 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-// Winner
+    // Winner
     function checkGameOver(ships, player) {
         if (ships.every(ship => ship.every(part => part.hit))) {
             document.getElementById('info').textContent = `${player} Win!`;

@@ -6,14 +6,17 @@ body {
     color: #383b45;
     font-family: 'Courier New', Courier, monospace;
 }
-span{
+
+span {
     line-height: 2em;
 }
-#info{
+
+#info {
     text-align: center;
     font-size: large;
     color: rgb(255, 76, 240);
 }
+
 .wrapper {
     max-width: 1200px;
     place-items: center;
@@ -42,10 +45,10 @@ span{
     align-items: center;
     cursor: pointer;
     box-sizing: border-box;
-    
+
 }
 
-#game-props{
+#game-props {
     max-width: 620px;
     padding: 10px;
     margin: 0 auto;
@@ -53,7 +56,8 @@ span{
     display: flex;
     gap: 15px;
 }
-.btn-container{
+
+.btn-container {
     max-width: 640px;
     margin: 10px auto;
 }
@@ -62,7 +66,17 @@ span{
 .ship {
     height: 30px;
     cursor: grab;
-    background-color: transparent; /* Make ship backgrounds transparent before placement */
+    background-color: transparent;
+    /* Make ship backgrounds transparent before placement */
+}
+.ship::before {
+    content: '⬤'; /* Draggable icon (you can use any Unicode character or a background image) */
+    left: -20px; /* Adjust this value to position the icon outside the ship */
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: #ff0000;
+    z-index: 9999;
 }
 
 /* Ship colors and widths before placement */
@@ -112,6 +126,7 @@ span{
 .cpu-board-bg {
     background-color: #cef8f4 !important;
 }
+
 .taken {
     background-color: #cef8f4;
 }
@@ -121,10 +136,9 @@ span{
 }
 
 .miss {
-    background-color: rgba(0,202,224,.8);
+    background-color: rgba(0, 202, 224, .8);
 }
 
 .sunk {
     background-color: black;
 }
-
