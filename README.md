@@ -31,7 +31,7 @@ A Battleship game developed in vanilla JS.
   - Indigo (3 squares)
   - Ceruleo (3 squares)
   - Naranja (5 squares)
-- Ships can be placed horizontally.
+- Ships can only be placed horizontally.
 - Players take turns attacking by selecting a square on the opponent's board.
 - 🏆 The first player to sink all opponent ships wins.
 
